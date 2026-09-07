@@ -1,37 +1,88 @@
-# Kredyt Kompas — demo wtyczki **IAAI Importer**
+<div align="center">
 
-To repozytorium hostuje **działające demo** wtyczki. Klient klika w jeden link i w swojej
-przeglądarce uruchamia się WordPress ze stylem strony **oraz wtyczką IAAI Importer**, która
-sama tworzy podstronę **„Nasze auta"** z ofertą pojazdów (zdjęcia, filtry marka/rok/uszkodzenie,
-karty, paginacja). Nic nie trzeba instalować — działa w przeglądarce (technologia *WordPress Playground*).
+# IAAI Importer — klikalne demo
 
-## ▶ Zobacz demo (kliknij)
+**Jeden link stawia WordPressa z wtyczką w Twojej przeglądarce.**
+Uruchamia się podstrona „Nasze auta" z ofertą pojazdów z aukcji: karty ze zdjęciem,
+ceną Buy Now, przebiegiem i uszkodzeniem, filtry marki, rocznika i typu uszkodzenia,
+sortowanie i paginacja. Nic nie trzeba instalować ani konfigurować.
 
-**[► Otwórz demo „Nasze auta"](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/krzysiek2115op/iaai-importer-demo/main/blueprint.json)**
+[▶ Otwórz demo](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/krzysiek2115op/iaai-importer-demo/main/blueprint.json) ·
+[Kod źródłowy wtyczki](https://github.com/krzysiek2115op/copart-iaai-importer) ·
+[Licencja GPL-2.0+](LICENSE)
 
-> Pełny link do wysłania klientowi:
-> ```
-> https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/krzysiek2115op/iaai-importer-demo/main/blueprint.json
-> ```
+<br>
 
-## Co widać w demie
-- Podstrona **„Nasze auta"** utworzona automatycznie po włączeniu wtyczki i dodana do menu.
-- **Karty pojazdów** ze zdjęciem, ceną „Buy Now", przebiegiem (km + mi), rodzajem uszkodzenia
-  i plakietkami *Run & Drive* / *Key Available*.
-- **Pasek filtrów** (marka, rok, uszkodzenie, sortowanie) + **paginacja**.
-- Wygląd **dziedziczy motyw** strony (kolory/czcionki) — u klienta dopasuje się do jego szablonu.
+[![Podstrona „Nasze auta" — filtry i karty pojazdów z ceną Buy Now, przebiegiem i plakietkami Copart / IAAI / Run & Drive](docs/zrzuty/01-nasze-auta.png)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/krzysiek2115op/iaai-importer-demo/main/blueprint.json)
 
-## Ważne (to tylko prezentacja)
-- Dane aut są **przykładowe** (atrapa), zdjęcia z `placehold.co` — żeby pokazać układ.
-- Wersja w przeglądarce jest **tymczasowa**: po odświeżeniu strony demo startuje od nowa.
-- W prawdziwym wdrożeniu auta pobiera automat (scraper) z **iaai.com**, a zdjęcia idą z serwerów IAAI.
-
-## Zawartość repo
-| Plik | Rola |
-|------|------|
-| `blueprint.json` | scenariusz startowy Playground (motyw + wtyczka + dane demo) |
-| `iaai-importer.zip` | wtyczka WordPress (ta sama, którą dostaje klient) |
-| `iaai-demo-seed.php` | mu-plugin: wstawia przykładowe auta i zezwala na obrazki demo |
+</div>
 
 ---
-*Demo generowane z prywatnego repo produktu. Kod źródłowy i dokumentacja wdrożeniowa — osobno.*
+
+## Link do wysłania klientowi
+
+```
+https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/krzysiek2115op/iaai-importer-demo/main/blueprint.json
+```
+
+## Co widać w demie
+
+- **Podstrona „Nasze auta"** tworzona automatycznie po włączeniu wtyczki
+  i wpinana w menu — klient nie musi jej zakładać.
+- **Karty pojazdów** ze zdjęciem, ceną „Buy Now", przebiegiem (km i mile),
+  rodzajem uszkodzenia i plakietkami *Copart* / *IAAI* / *Run & Drive* / *Key Available*.
+- **Pasek filtrów** (źródło, marka, rocznik, uszkodzenie, sortowanie) i paginacja.
+- Wygląd **dziedziczy motyw** strony — u klienta dopasuje się do jego szablonu.
+
+## Czego demo NIE pokazuje
+
+Uczciwie, bo to prezentacja, nie produkt:
+
+| Rzecz | Jak jest w demie | Jak jest u klienta |
+|---|---|---|
+| **Zdjęcia pojazdów** | Kolorowe kafle z nazwą modelu (`placehold.co`) | Prawdziwe zdjęcia hotlinkowane z serwerów aukcji — **0 MB na dysku klienta** |
+| **Dane pojazdów** | Atrapa wstawiona przez mu-plugin | Scraper w Pythonie na VPS, cron/systemd, crawl → normalizacja → dedup → audyt |
+| **Trwałość** | Znika po odświeżeniu karty | Własna baza MySQL, wtyczka czyta ją tylko do odczytu |
+| **Pasek administratora** | Widoczny — blueprint ma `"login": true`, żeby dało się zajrzeć do kokpitu | Odwiedzający strony klienta go nie widzi |
+| **Wersja wtyczki** | **0.30.0** — paczka `iaai-importer.zip` w tym repo | **0.30.6** ([źródło](https://github.com/krzysiek2115op/copart-iaai-importer)) |
+
+> ℹ️ **O różnicy wersji.** Paczka w demie jest o sześć wydań starsza od produktu.
+> Różnica to procedura odinstalowania (`uninstall.php`) i migracja klucza głównego
+> pod dwa źródła danych — **żadna z nich nie jest w demie widoczna**. Paczka nie
+> została podmieniona świadomie: podmiana bez uruchomienia dema od zera znaczyłaby
+> wystawienie klientowi linku, którego nikt nie sprawdził. Odświeżenie wymaga
+> przebiegu `npx @wp-playground/cli server --blueprint=blueprint.json` i obejrzenia
+> wyniku.
+
+## Zawartość repo
+
+| Plik | Rola |
+|---|---|
+| `blueprint.json` | Scenariusz startowy Playground: motyw, wtyczka, treść, dane demo |
+| `iaai-importer.zip` | Wtyczka WordPress — ta sama paczka, którą dostaje klient |
+| `iaai-demo-seed.php` | mu-plugin: wstawia przykładowe auta i zezwala na obrazki demo |
+| `kredyt-kompas-content.php`, `kredyt-kompas.css` | Fikcyjna witryna klienta, w której wtyczka jest pokazywana |
+
+Wszystkie cztery zasoby blueprint pobiera przez `raw.githubusercontent.com`
+z gałęzi `main` tego repozytorium — dlatego musi ono zostać publiczne.
+
+## O nazwie „Kredyt Kompas"
+
+Demo działa na **fikcyjnej witrynie klienta**, żeby pokazać wtyczkę tam, gdzie
+faktycznie pracuje: w istniejącej stronie firmowej, a nie na pustym WordPressie.
+Ta sama fikcyjna marka wraca w dwóch innych projektach —
+[`kredyt-kompas-demo`](https://github.com/krzysiek2115op/kredyt-kompas-demo)
+(strona statyczna) i
+[`mp-offer-automation-suite`](https://github.com/krzysiek2115op/mp-offer-automation-suite)
+(demo pakietu ofertowego).
+
+## Licencja
+
+**GPL-2.0-or-later** ([LICENSE](LICENSE)) — tak samo jak dołączona wtyczka, która
+deklaruje tę licencję w swoim nagłówku, i tak samo jak
+[repozytorium źródłowe](https://github.com/krzysiek2115op/copart-iaai-importer).
+
+Wcześniej repo miało licencję MIT, co było sprzeczne: MIT na poziomie repozytorium
+sugerowałby, że dołączona paczka GPL też jest na MIT. Wtyczka WordPressa nie może
+być na MIT, jeśli dziedziczy z rdzenia — a licencja repo nie ma prawa mówić czegoś
+innego niż nagłówek pliku w środku.
